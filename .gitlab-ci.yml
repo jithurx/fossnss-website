@@ -1,0 +1,53 @@
+# GitLab CI/CD Pipeline for FOSSNSS Website
+# Deploys Astro static site to GitLab Pages
+
+image: node:18-alpine
+
+# Only run on main branch
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Cache configuration for faster builds
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  FF_USE_FASTZIP: "true"
+
+cache:
+  key:
+    files:
+      - package-lock.json
+    prefix: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm/
+    - node_modules/
+
+# Pages job - builds and deploys to GitLab Pages
+pages:
+  stage: deploy
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+  script:
+    - echo "Building Astro site..."
+    - npm run build
+    - echo "Build complete. Verifying output..."
+    - ls -la dist/ | head -10
+    - echo "Checking for images in dist..."
+    - ls -la dist/content-images/ 2>/dev/null | head -5 || echo "Images will be copied by Astro during build"
+    - echo "Preparing deployment..."
+    - rm -rf public
+    - mv dist public
+    - echo "Deployment files ready:"
+    - ls -la public/ | head -10
+    - echo "Verifying images are present:"
+    - test -d public/content-images && echo "✓ content-images directory exists" || echo "✗ content-images missing"
+    - test -f public/foss-icon.png && echo "✓ foss-icon.png exists" || echo "✗ foss-icon.png missing"
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  environment:
+    name: production
+    url: https://jithurx.gitlab.io/fossnssc
