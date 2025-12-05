@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostLayout from '../../layouts/PostLayout.astro';
+import Giscus from '../../components/Giscus.astro';
+
+// This file only renders local Markdown events.
+// This is a dynamic route that catches all slugs under /events/
+
+export async function getStaticPaths() {
+  const eventEntries = await getCollection('events');
+  return eventEntries.map(entry => ({
+    params: { slug: entry.slug }, props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+<BaseLayout title={entry.data.title}>
+  <PostLayout frontmatter={entry.data}>
+    <Content />
+    
+    <hr class="my-8 border-gray-200 dark:border-gray-700" />
+    
+    <Giscus />
+  </PostLayout>
+</BaseLayout>

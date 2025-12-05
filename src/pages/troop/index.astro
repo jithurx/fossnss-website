@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Get current year
+const currentYear = new Date().getFullYear();
+
+// Get the base path - use Astro.url to get current path and extract base
+const base = Astro.url.pathname.split('/troop')[0] || '/fossnssc';
+const redirectPath = `${base}/troop${currentYear}`;
+
+// Instead of server-side redirect (which creates absolute URLs),
+// use a client-side redirect that works in both dev and production
+---
+<BaseLayout title="Redirecting...">
+  <script define:vars={{ currentYear }} is:inline>
+    // Client-side redirect that preserves the current origin
+    (function() {
+      const currentPath = window.location.pathname;
+      const base = currentPath.split('/troop')[0] || '';
+      window.location.href = base + '/troop' + currentYear;
+    })();
+  </script>
+  <div class="container mx-auto p-4 text-center">
+    <p>Redirecting to <a href={redirectPath}>Troop {currentYear}</a>...</p>
+  </div>
+</BaseLayout>

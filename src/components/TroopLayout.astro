@@ -1,0 +1,85 @@
+---
+import { getPageUrl, getImageUrl } from '../utils/imageUrl';
+
+interface Member {
+  name: string;
+  username?: string;
+  role?: string;
+}
+
+interface Props {
+  year: string;
+  years: string[];
+  members: Member[];
+}
+
+const { year, years = [], members = [] } = Astro.props;
+---
+
+<div class="text-center mb-12">
+  <nav class="flex justify-center flex-wrap gap-2 mb-8" aria-label="Year navigation">
+    {years.map(y => (
+      <a
+        href={getPageUrl(`/troop${y}`)}
+        class={`inline-flex items-center justify-center px-6 py-3 rounded-full text-base font-medium transition-all ${
+          y === year
+            ? 'bg-blue-600 text-white shadow-lg'
+            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+        }`}
+        aria-current={y === year ? 'page' : undefined}
+      >
+        {y}
+      </a>
+    ))}
+  </nav>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+  {members.map(member => (
+    <div class="group">
+      <div class="flex flex-col items-center p-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow">
+        <div class="mb-4">
+          {member.username ? (
+            <a href={`https://github.com/${member.username}`} 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="block w-32 h-32 rounded-full overflow-hidden border-2 border-transparent group-hover:border-blue-500 transition-colors">
+              <img 
+                src={`https://github.com/${member.username}.png?size=400`} 
+                alt={member.name}
+                class="w-full h-full object-cover"
+                onerror="this.src='/icon.png'"
+              />
+            </a>
+          ) : (
+            <div class="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+              <img src={getImageUrl('/icon.png')} alt={member.name} class="w-full h-full object-cover" />
+            </div>
+          )}
+        </div>
+        <div class="text-center">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors">
+            {member.username ? (
+              <a 
+                href={`https://github.com/${member.username}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="hover:underline"
+              >
+                {member.name}
+              </a>
+            ) : (
+              member.name
+            )}
+          </h3>
+          {member.role && (
+            <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mt-1">{member.role}</p>
+          )}
+          {member.batch && (
+            <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Batch {member.batch}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  ))}
+</div>

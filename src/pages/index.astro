@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { getImageUrl, getPageUrl } from '../utils/imageUrl';
+
+// Fetch recent blog posts and events
+const allBlogs = await getCollection('blog');
+const allEvents = await getCollection('events');
+
+// Sort by date and get 3 most recent
+const recentBlogs = allBlogs
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+
+const recentEvents = allEvents
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+---
+<BaseLayout title="FOSSNSS • Free and Open Source Software Cell">
+  <div class="container mx-auto p-4 max-w-4xl">
+    <!-- Hero Section -->
+    <div class="mb-12 py-8">
+      <h1 class="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">FOSSNSS</h1>
+      <p class="text-2xl md:text-3xl text-gray-700 dark:text-gray-300 font-semibold mb-4">
+        Free and Open Source Software Cell
+      </p>
+      <p class="text-lg text-gray-600 dark:text-gray-400">
+        NSS College of Engineering, Palakkad
+      </p>
+      <p class="mt-6 text-gray-700 dark:text-gray-300 leading-relaxed max-w-2xl">
+        A collective of students dedicated to exploring, contributing to, and advocating for Free and Open-Source Software since 2009. We foster innovation, collaboration, and excellence in our community.
+      </p>
+    </div>
+
+    <div class="mt-8 flex flex-wrap gap-4">
+      <a href={getPageUrl('/blog')} class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
+        View Blog
+      </a>
+      <a href={getPageUrl('/events')} class="inline-block bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
+        Events
+      </a>
+      <a href={getPageUrl('/troop')} class="inline-block bg-purple-600 text-white font-bold py-2 px-4 rounded hover:bg-purple-700">
+        Troop
+      </a>
+      <a href={getPageUrl('/about')} class="inline-block bg-gray-200 dark:bg-gray-700 font-bold py-2 px-4 rounded hover:bg-gray-300 dark:hover:bg-gray-600">
+        About
+      </a>
+    </div>
+
+    <!-- Recent Blog Posts -->
+    <section class="mt-12">
+      <h2 class="text-3xl font-bold mb-6">Recent Blog Posts</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {recentBlogs.map(blog => (
+          <a href={getPageUrl(`/blog/${blog.slug}`)} class="group">
+            <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+              {blog.data.cover && (
+                <img 
+                  src={getImageUrl(blog.data.cover)} 
+                  alt={blog.data.title}
+                  class="w-full h-48 object-cover group-hover:opacity-80 transition"
+                />
+              )}
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
+                  {blog.data.title}
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                  {blog.data.desc || blog.data.title}
+                </p>
+                <div class="flex justify-between items-center text-xs text-gray-500 dark:text-gray-500">
+                  <span>{blog.data.date.toLocaleDateString()}</span>
+                  <span>by {blog.data.author}</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div class="mt-6 text-center">
+        <a href={getPageUrl('/blog')} class="inline-block text-blue-600 dark:text-blue-400 font-semibold hover:underline">
+          View all blog posts →
+        </a>
+      </div>
+    </section>
+
+    <!-- Recent Events -->
+    <section class="mt-12">
+      <h2 class="text-3xl font-bold mb-6">Recent Events</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {recentEvents.map(event => (
+          <a href={getPageUrl(`/events/${event.slug}`)} class="group">
+            <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+              {event.data.cover && (
+                <img 
+                  src={getImageUrl(event.data.cover)} 
+                  alt={event.data.title}
+                  class="w-full h-48 object-cover group-hover:opacity-80 transition"
+                />
+              )}
+              <div class="p-4">
+                <h3 class="font-bold text-lg mb-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition">
+                  {event.data.title}
+                </h3>
+                <div class="flex justify-between items-center text-xs text-gray-500 dark:text-gray-500">
+                  <span>{event.data.date.toLocaleDateString()}</span>
+                  <span>by {event.data.author}</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div class="mt-6 text-center">
+        <a href={getPageUrl('/events')} class="inline-block text-green-600 dark:text-green-400 font-semibold hover:underline">
+          View all events →
+        </a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

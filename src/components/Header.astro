@@ -1,0 +1,21 @@
+---
+import { getImageUrl, getPageUrl } from '../utils/imageUrl';
+
+// A simple, clean site header
+---
+<header class="border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-50">
+  <nav class="container mx-auto p-4 flex justify-between items-center max-w-5xl">
+    <a href={getPageUrl('/')} class="flex items-center space-x-2" title="Homepage">
+      <img src={getImageUrl('/foss-icon.png')} alt="Logo" class="w-8 h-8" />
+      <span class="font-bold text-xl text-gray-900 dark:text-gray-100">
+        FOSS NSSCE
+      </span>
+    </a>
+    <div class="flex space-x-4 md:space-x-6">
+      <a href={getPageUrl('/blog')} class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white">Blog</a>
+      <a href={getPageUrl('/events')} class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white">Events</a>
+      <a href={getPageUrl('/troop')} class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white">Troop</a>
+      <a href={getPageUrl('/about')} class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white">About</a>
+      </div>
+  </nav>
+</header>

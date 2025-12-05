@@ -1,0 +1,13 @@
+/*
+This file is where Tailwind's directives are injected.
+You can also add any global base styles here.
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Example of a global style */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

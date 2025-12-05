@@ -1,0 +1,95 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getImageUrl, getPageUrl } from '../../utils/imageUrl';
+
+// --- Hybrid Content Fetching ---
+
+// 1. Fetch from Local Markdown
+const localEvents = await getCollection('events');
+const formattedLocalEvents = localEvents.map(event => ({
+  slug: `/events/${event.slug}`,
+  title: event.data.title,
+  date: event.data.date,
+  cover: event.data.cover
+}));
+
+// 2. Fetch from Server (Optional)
+let serverEvents = [];
+const strapiApiUrl = import.meta.env.STRAPI_API_URL;
+
+if (strapiApiUrl) {
+  try {
+    // Make sure to populate cover in your Strapi query
+    const response = await fetch(`${strapiApiUrl}/api/events?populate=cover`); 
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data && Array.isArray(data.data)) {
+        serverEvents = data.data.map(event => ({
+          slug: `/events/server/${event.attributes.slug}`, 
+          title: event.attributes.title,
+          date: new Date(event.attributes.publishedAt),
+          cover: event.attributes.cover?.data?.attributes?.url
+                 ? `${strapiApiUrl}${event.attributes.cover.data.attributes.url}`
+                 : null
+        }));
+      } else { console.warn('Strapi response format is not as expected.'); }
+    } else { console.warn(`Failed to fetch from Strapi: ${response.statusText}`); }
+  } catch (e) {
+    if (e instanceof Error) {
+      console.error('Strapi server is offline or unreachable.');
+      console.error(e.message);
+    }
+  }
+}
+
+// 3. Merge and Sort
+const allEvents = [...formattedLocalEvents, ...serverEvents].sort(
+  (a, b) => b.date.getTime() - a.date.getTime()
+);
+---
+<BaseLayout title="Events">
+  <div class="container mx-auto p-4 max-w-5xl"> {/* Wider container for cards */}
+    <h1 class="text-4xl font-bold mb-6">Events</h1>
+    
+    {/* ... (Info box remains the same) ... */}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {allEvents.map(event => (
+        <a 
+          href={getPageUrl(event.slug)} 
+          class="block border border-gray-200 dark:border-gray-700 rounded-lg shadow hover:shadow-lg transition-shadow bg-white dark:bg-gray-800 overflow-hidden"
+        >
+          
+          {/* Card Image */}
+          {event.cover ? (
+            <img 
+              src={getImageUrl(event.cover)} 
+              alt={event.title} 
+              class="w-full h-48 object-cover" {/* Fixed height for consistency */}
+            />
+          ) : (
+            <div class="w-full h-48 bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-400">
+              No Image
+            </div>
+          )}
+
+          {/* Card Content */}
+          <div class="p-4">
+            <h2 class="text-xl font-semibold text-blue-600 dark:text-blue-400 mb-2 truncate" title={event.title}>
+              {event.title}
+            </h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              {event.date.toDateString()}
+            </p>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    {allEvents.length === 0 && (
+      <p>No events found. Add some to `src/content/events/` to get started.</p>
+    )}
+  </div>
+</BaseLayout>

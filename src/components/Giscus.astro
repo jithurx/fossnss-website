@@ -1,0 +1,22 @@
+---
+import Giscus from '@giscus/react';
+// This component wraps the Giscus React component for use in Astro.
+// 'client:load' tells Astro to load this as a client-side component.
+---
+<div class="mt-12">
+  <Giscus
+    client:load
+    id="comments"
+    repo="jithurx/fossnssc-comments"
+    repoId="R_kgDOQhz0Ew"
+    category="General"
+    categoryId="DIC_kwDOQhz0E84CzWDV"
+    mapping="pathname"
+    reactionsEnabled="1"
+    emitMetadata="0"
+    inputPosition="bottom"
+    theme="gruvbox"
+    lang="en"
+    loading="lazy"
+  />
+</div>

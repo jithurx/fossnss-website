@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPageUrl } from '../utils/imageUrl';
+---
+<BaseLayout title="About FOSSNSS">
+  <div class="container mx-auto p-4 max-w-3xl">
+    
+    <div class="prose dark:prose-invert lg:prose-lg max-w-none">
+      <h1>About Us</h1>
+      <p>
+        This is a placeholder 'About' page. 
+      </p>
+      <p>
+        You can edit this file (`src/pages/about.astro`) to add information
+        about the FOSS cell, its history, mission, and members.
+      </p>
+      <p>
+        The styles you see here are applied automatically by the 
+        `@tailwindcss/typography` plugin (the `prose` class in `PostLayout.astro`, 
+        though this page doesn't use that layout, we use the `prose` class directly).
+      </p>
+
+      <h2>Community Guidelines</h2>
+      <p>
+        We are committed to maintaining a welcoming and inclusive community. 
+        Please review our <a href={getPageUrl('/code-of-conduct')}>Code of Conduct</a> to understand 
+        the values and guidelines that govern our community.
+      </p>
+    </div>
+
+  </div>
+</BaseLayout>

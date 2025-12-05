@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostLayout from '../../layouts/PostLayout.astro';
+import Giscus from '../../components/Giscus.astro';
+
+// This file only renders local Markdown posts.
+// A separate file (e.g., /pages/blog/server/[...slug].astro)
+// would be needed to render posts from Strapi if you wanted different layouts.
+// This setup assumes server posts are linked externally or handled differently.
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug }, props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+<BaseLayout title={entry.data.title} description={entry.data.desc}>
+  <PostLayout frontmatter={entry.data}>
+    <Content />
+    
+    <hr class="my-8 border-gray-200 dark:border-gray-700" />
+    
+    <Giscus />
+  </PostLayout>
+</BaseLayout>

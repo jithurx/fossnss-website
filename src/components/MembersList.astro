@@ -1,0 +1,14 @@
+---
+import MemberCard from './MemberCard.astro';
+const { members } = Astro.props as { members: Array<{ username?: string; name: string; role?: string; batch?: number }> };
+---
+{members && members.length > 0 && (
+  <section aria-labelledby="members-title" class="my-8">
+    <h2 id="members-title" class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Members</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {members.map((m) => (
+        <MemberCard member={m} />
+      ))}
+    </div>
+  </section>
+)}

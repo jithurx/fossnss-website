@@ -1,0 +1,32 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getFaviconUrl } from '../utils/imageUrl';
+import '../styles/globals.css';
+
+// Use site metadata from old config as defaults
+const { 
+  title = "FOSSNSS • Free and Open Source Software cell", 
+  description = "The FOSS Cell of NSS College of Engineering, Palakkad." 
+} = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/png" href={getFaviconUrl('/foss-icon.png')} />
+    <meta name="generator" content={Astro.generator} />
+    
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    <ViewTransitions />
+  </head>
+  <body class="bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen flex flex-col font-sans">
+    <Header />
+    <main class="flex-grow">
+      <slot /> </main>
+    <Footer />
+  </body>
+</html>
