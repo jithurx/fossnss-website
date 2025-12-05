@@ -1,11 +1,14 @@
+# .github/workflows/deploy.yml
 name: Deploy Astro Site to GitHub Pages
 
 on:
   push:
     branches:
+      # Only deploy when changes are pushed to the main branch
       - main
   workflow_dispatch:
 
+# Grant necessary permissions for the GitHub Pages deployment action
 permissions:
   contents: read
   pages: write
@@ -17,32 +20,48 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        # Fetch entire history required by the pages action
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js 18
+      - name: Setup Node.js 18 & Cache Dependencies
+        # Use Node.js 18 matching your original GitLab setup
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
+          cache: 'npm' # Enable caching for 'npm ci' to speed up subsequent builds
 
       - name: Install dependencies and Build Astro site
         run: |
           echo "Installing dependencies..."
+          # Clean install dependencies (from package-lock.json)
           npm ci
-          echo "Building Astro site (output to 'dist/')..."
+          
+          echo "Building Astro site..."
+          # Run the standard build command
           npm run build
-          echo "Build complete."
+          
+          # CRITICAL FIX for GitHub Pages subdirectory deployments
+          # This file stops GitHub Pages (Jekyll) from ignoring directories 
+          # starting with an underscore (like Astro's _assets)
+          echo "Applying .nojekyll fix..."
+          touch dist/.nojekyll
+          
+          echo "Build complete. Output in 'dist/'"
 
       - name: Upload GitHub Pages artifact
+        # The official action to upload the production-ready files (from 'dist/')
         uses: actions/upload-pages-artifact@v3
         with:
+          # Astro's default output directory
           path: ./dist
 
   deploy:
+    # This job only runs after the 'build' job succeeds
     needs: build
     runs-on: ubuntu-latest
 
+    # Specify the target environment
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -50,4 +69,5 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
+        # The official action to deploy the uploaded artifact
         uses: actions/deploy-pages@v4
