@@ -1,10 +1,13 @@
+// astro.config.mjs (Updated)
+
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import { visit } from 'unist-util-visit';
 
-
-const projectPath = 'fossnssc';
+const projectPath = 'fossnssc'; 
+// NOTE: Replace <YOUR_GITHUB_USERNAME> with your actual GitHub username
+const githubUsername = 'jithurx'; 
 
 // Rehype plugin to add base path prefix to image URLs in markdown
 function addBasePathToImages() {
@@ -50,9 +53,9 @@ export default defineConfig({
     plugins: [fixCssPaths()],
   },
   
-  // 'site' is the full, public URL.
-  site: `https://jithurx.gitlab.io/${projectPath}`,
+  // *** CRITICAL CHANGE HERE: UPDATE TO THE NEW GITHUB PAGES URL ***
+  site: `https://${githubUsername}.github.io/${projectPath}`,
   
-  // 'base' is required for hosting at subdirectory on GitLab Pages
+  // 'base' remains the same as it correctly handles subdirectory hosting
   base: `/${projectPath}`,
 });
