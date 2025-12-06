@@ -24,19 +24,9 @@ function addBasePathToImages() {
   };
 }
 
-// Vite plugin to fix CSS paths in HTML that don't have the base path
-function fixCssPaths() {
-  return {
-    name: 'fix-css-paths',
-    transformIndexHtml(html) {
-      // Fix CSS links that start with /styles/ but don't have the base path
-      return html.replace(
-        /href="\/styles\/([^"]+)"/g,
-        `href="/${projectPath}/styles/$1"`
-      );
-    },
-  };
-}
+// REMOVED: The custom Vite plugin fixCssPaths() is removed to avoid potential interference
+// function fixCssPaths() { ... }
+
 
 // https://astro.build/config
 export default defineConfig({
@@ -49,9 +39,10 @@ export default defineConfig({
     rehypePlugins: [addBasePathToImages],
   },
   
-  vite: {
-    plugins: [fixCssPaths()],
-  },
+  // REMOVED: The custom vite plugin call
+  // vite: {
+  //   plugins: [fixCssPaths()],
+  // },
   
   // *** CRITICAL CHANGE HERE: UPDATE TO THE NEW GITHUB PAGES URL ***
   site: `https://${githubUsername}.github.io/${projectPath}`,
