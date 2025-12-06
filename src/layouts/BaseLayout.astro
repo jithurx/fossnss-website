@@ -3,12 +3,12 @@ import { ViewTransitions } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getFaviconUrl } from '../utils/imageUrl';
-import '../styles/globals.css';
+// We removed 'import '../styles/globals.css';' because the path was not resolving correctly.
 
 // Use site metadata from old config as defaults
 const { 
   title = "FOSSNSS • Free and Open Source Software cell", 
-  description = "The FOSS Cell of NSS College of Engineering, Palakkad." 
+  description = "The FOSS Cell of NSS College of Engineering, Palakkad."
 } = Astro.props;
 ---
 <html lang="en">
@@ -20,6 +20,9 @@ const {
     
     <title>{title}</title>
     <meta name="description" content={description} />
+    
+    {/* FIX: Explicitly link the global CSS with the hardcoded base path to prevent missing styles. */}
+    <link rel="stylesheet" href="/fossnssc/styles/globals.css" />
     
     <ViewTransitions />
   </head>

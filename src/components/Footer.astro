@@ -1,12 +1,11 @@
 ---
-import { getPageUrl } from '../utils/imageUrl';
+import { getPageUrl } from '../utils/imageUrl'; // Keeping the import just in case it's used elsewhere
 
 const year = new Date().getFullYear();
 ---
 <footer class="border-t border-gray-200 dark:border-gray-700 mt-16 bg-gray-50 dark:bg-gray-800">
   <div class="container mx-auto px-4 py-12 max-w-5xl">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-      <!-- About -->
       <div>
         <h3 class="font-bold text-lg mb-3 text-gray-900 dark:text-white">FOSSNSS</h3>
         <p class="text-sm text-gray-600 dark:text-gray-400">
@@ -14,32 +13,34 @@ const year = new Date().getFullYear();
         </p>
       </div>
       
-      <!-- Quick Links -->
       <div>
         <h3 class="font-bold text-lg mb-3 text-gray-900 dark:text-white">Quick Links</h3>
         <ul class="space-y-2 text-sm">
-          <li><a href={getPageUrl('/blog')} class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Blog</a></li>
-          <li><a href={getPageUrl('/events')} class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Events</a></li>
-          <li><a href={getPageUrl('/troop')} class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Team</a></li>
-          <li><a href={getPageUrl('/about')} class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">About</a></li>
+          {/* FIX: Explicitly added the '/fossnssc' base path to internal links */}
+          <li><a href="/fossnssc/blog" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Blog</a></li>
+          <li><a href="/fossnssc/events" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Events</a></li>
+          <li><a href="/fossnssc/troop" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Team</a></li>
+ 
+          <li><a href="/fossnssc/about" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">About</a></li>
         </ul>
       </div>
       
-      <!-- Community -->
       <div>
         <h3 class="font-bold text-lg mb-3 text-gray-900 dark:text-white">Community</h3>
         <ul class="space-y-2 text-sm">
-          <li><a href={getPageUrl('/code-of-conduct')} class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Code of Conduct</a></li>
+          {/* FIX: Explicitly added the '/fossnssc' base path to internal links */}
+          <li><a href="/fossnssc/code-of-conduct" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Code of Conduct</a></li>
+          
           <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Contributing</a></li>
           <li><a href="#" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Contact</a></li>
         </ul>
       </div>
       
-      <!-- Resources -->
       <div>
         <h3 class="font-bold text-lg mb-3 text-gray-900 dark:text-white">Resources</h3>
         <ul class="space-y-2 text-sm">
           <li><a href="https://www.debian.org" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Debian</a></li>
+  
           <li><a href="https://www.ubuntu.com" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">Ubuntu</a></li>
           <li><a href="https://fsci.org.in" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">FSCI</a></li>
         </ul>
@@ -48,10 +49,12 @@ const year = new Date().getFullYear();
     
     <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
       <div class="text-center text-gray-600 dark:text-gray-400">
-        <p class="text-sm">&copy; {year} FOSSNSS • NSS College of Engineering, Palakkad</p>
+        <p class="text-sm">&copy;
+{year} FOSSNSS • NSS College of Engineering, Palakkad</p>
         <p class="text-xs mt-3">
           Built with <a href="https://astro.build/" class="hover:text-blue-600 dark:hover:text-blue-400 transition" target="_blank" rel="noopener noreferrer">Astro</a>
-          &amp; <a href="https://tailwindcss.com/" class="hover:text-blue-600 dark:hover:text-blue-400 transition" target="_blank" rel="noopener noreferrer">Tailwind CSS</a>
+          &amp;
+          <a href="https://tailwindcss.com/" class="hover:text-blue-600 dark:hover:text-blue-400 transition" target="_blank" rel="noopener noreferrer">Tailwind CSS</a>
         </p>
       </div>
     </div>
