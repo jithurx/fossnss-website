@@ -44,7 +44,7 @@ export function getFaviconUrl(faviconPath: string): string {
 
 /**
  * Get the full page URL with base path prefix
- * Use this for internal page links to ensure they work correctly on GitLab Pages
+ * Use this for internal page links to ensure they work correctly on GitHub Pages
  * @param pagePath - The page path (e.g., '/blog', '/about', '/code-of-conduct')
  * @returns The full URL with base path prefix
  */
