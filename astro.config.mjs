@@ -1,4 +1,4 @@
-// astro.config.mjs (Updated)
+// astro.config.mjs (FINAL FIX: Aligning projectPath with Repository Name)
 
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
@@ -25,29 +25,31 @@ function addBasePathToImages() {
   };
 }
 
-// Vite plugin to fix CSS and static asset paths in final HTML that are missed
+// Vite plugin to fix all static asset paths in final HTML that are missed by Astro's core logic
 function fixAssetPaths() {
   return {
     name: 'fix-asset-paths',
     transformIndexHtml(html) {
-      // Fix paths that start with /styles/, /content-images/, /img/, or /_astro/
-      let fixedHtml = html.replace(
+      let fixedHtml = html;
+      
+      // 1. Fix CSS links
+      fixedHtml = fixedHtml.replace(
         /href="\/styles\/([^"]+)"/g,
         `href="/${projectPath}/styles/$1"`
       );
+      
+      // 2. Fix Hashed Astro/Vite Scripts and CSS (_astro directory)
       fixedHtml = fixedHtml.replace(
-        /src="\/content-images\/([^"]+)"/g,
-        `src="/${projectPath}/content-images/$1"`
+        /(href|src)="\/_astro\/([^"]+)"/g,
+        `$1="/${projectPath}/_astro/$2"`
       );
+      
+      // 3. Fix main icon/favicon paths (e.g., /foss-icon.png)
       fixedHtml = fixedHtml.replace(
-        /src="\/img\/([^"]+)"/g,
-        `src="/${projectPath}/img/$1"`
+        /(href|src)="\/foss-icon.png"/g,
+        `$1="/${projectPath}/foss-icon.png"`
       );
-      // Catch core Astro/Vite assets
-      fixedHtml = fixedHtml.replace(
-        /href="\/_astro\/([^"]+)"/g,
-        `href="/${projectPath}/_astro/$1"`
-      );
+      
       return fixedHtml;
     },
   };
@@ -72,5 +74,5 @@ export default defineConfig({
   site: `https://${githubUsername}.github.io/${projectPath}`,
   
   // 'base' now correctly reflects the deployment subdirectory
-  base: `/${projectPath}`, // Now: /fossnss-website
+  base: `/${projectPath}`, // FINAL VALUE: /fossnss-website
 });
