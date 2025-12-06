@@ -1,16 +1,16 @@
-// astro.config.mjs (Final Fix: Aligning projectPath with Repository Name)
+// astro.config.mjs (Updated)
 
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import { visit } from 'unist-util-visit';
 
-// Based on your deployment URL (https://jithurx.github.io/fossnss-website/)
+// *** CRITICAL FIX: This MUST match your GitHub repository name
 const projectPath = 'fossnss-website'; 
 // NOTE: Replace <YOUR_GITHUB_USERNAME> with your actual GitHub username
 const githubUsername = 'jithurx'; 
 
-// Rehype plugin to add base path prefix to image URLs in markdown
+// Rehype plugin to add base path prefix to image URLs in markdown content
 function addBasePathToImages() {
   return (tree) => {
     visit(tree, 'element', (node) => {
@@ -25,17 +25,25 @@ function addBasePathToImages() {
   };
 }
 
-// Re-introducing the manual path fix with the CORRECT projectPath as a safeguard
-function fixCssPaths() {
+// Vite plugin to fix CSS and static asset paths in final HTML that are missed
+function fixAssetPaths() {
   return {
-    name: 'fix-css-paths',
+    name: 'fix-asset-paths',
     transformIndexHtml(html) {
-      // Fix CSS links that start with /styles/ but don't have the base path
+      // Fix paths that start with /styles/, /content-images/, /img/, or /_astro/
       let fixedHtml = html.replace(
         /href="\/styles\/([^"]+)"/g,
         `href="/${projectPath}/styles/$1"`
       );
-      // Also catch any un-prefixed hashed assets (e.g., /_astro/...)
+      fixedHtml = fixedHtml.replace(
+        /src="\/content-images\/([^"]+)"/g,
+        `src="/${projectPath}/content-images/$1"`
+      );
+      fixedHtml = fixedHtml.replace(
+        /src="\/img\/([^"]+)"/g,
+        `src="/${projectPath}/img/$1"`
+      );
+      // Catch core Astro/Vite assets
       fixedHtml = fixedHtml.replace(
         /href="\/_astro\/([^"]+)"/g,
         `href="/${projectPath}/_astro/$1"`
@@ -44,6 +52,7 @@ function fixCssPaths() {
     },
   };
 }
+
 
 // https://astro.build/config
 export default defineConfig({
@@ -57,10 +66,9 @@ export default defineConfig({
   },
   
   vite: {
-    plugins: [fixCssPaths()],
+    plugins: [fixAssetPaths()],
   },
   
-  // Update site and base to use the correct projectPath (repository name)
   site: `https://${githubUsername}.github.io/${projectPath}`,
   
   // 'base' now correctly reflects the deployment subdirectory

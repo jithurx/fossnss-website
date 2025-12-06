@@ -3,7 +3,8 @@
  * Automatically prepends the base path when needed
  */
 
-const BASE_PATH = '/fossnssc';
+// *** CRITICAL FIX: Update to the correct GitHub repository name
+const BASE_PATH = '/fossnss-website';
 
 /**
  * Get the full image URL with base path prefix
