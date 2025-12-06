@@ -5,7 +5,7 @@ import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import { visit } from 'unist-util-visit';
 
-// *** CRITICAL FIX: This MUST match your GitHub repository name
+// *** CRITICAL FIX: Changed from 'fossnssc' to 'fossnss-website'
 const projectPath = 'fossnss-website'; 
 // NOTE: Replace <YOUR_GITHUB_USERNAME> with your actual GitHub username
 const githubUsername = 'jithurx'; 

@@ -3,7 +3,7 @@
  * Automatically prepends the base path when needed
  */
 
-// *** CRITICAL FIX: Update to the correct GitHub repository name
+// *** CRITICAL FIX: The BASE_PATH MUST match your GitHub repository name
 const BASE_PATH = '/fossnss-website';
 
 /**
