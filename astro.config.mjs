@@ -1,11 +1,12 @@
-// astro.config.mjs (Updated)
+// astro.config.mjs (Final Fix: Aligning projectPath with Repository Name)
 
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import { visit } from 'unist-util-visit';
 
-const projectPath = 'fossnssc'; 
+// Based on your deployment URL (https://jithurx.github.io/fossnss-website/)
+const projectPath = 'fossnss-website'; 
 // NOTE: Replace <YOUR_GITHUB_USERNAME> with your actual GitHub username
 const githubUsername = 'jithurx'; 
 
@@ -24,9 +25,25 @@ function addBasePathToImages() {
   };
 }
 
-// REMOVED: The custom Vite plugin fixCssPaths() is removed to avoid potential interference
-// function fixCssPaths() { ... }
-
+// Re-introducing the manual path fix with the CORRECT projectPath as a safeguard
+function fixCssPaths() {
+  return {
+    name: 'fix-css-paths',
+    transformIndexHtml(html) {
+      // Fix CSS links that start with /styles/ but don't have the base path
+      let fixedHtml = html.replace(
+        /href="\/styles\/([^"]+)"/g,
+        `href="/${projectPath}/styles/$1"`
+      );
+      // Also catch any un-prefixed hashed assets (e.g., /_astro/...)
+      fixedHtml = fixedHtml.replace(
+        /href="\/_astro\/([^"]+)"/g,
+        `href="/${projectPath}/_astro/$1"`
+      );
+      return fixedHtml;
+    },
+  };
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -39,14 +56,13 @@ export default defineConfig({
     rehypePlugins: [addBasePathToImages],
   },
   
-  // REMOVED: The custom vite plugin call
-  // vite: {
-  //   plugins: [fixCssPaths()],
-  // },
+  vite: {
+    plugins: [fixCssPaths()],
+  },
   
-  // *** CRITICAL CHANGE HERE: UPDATE TO THE NEW GITHUB PAGES URL ***
+  // Update site and base to use the correct projectPath (repository name)
   site: `https://${githubUsername}.github.io/${projectPath}`,
   
-  // 'base' remains the same as it correctly handles subdirectory hosting
-  base: `/${projectPath}`,
+  // 'base' now correctly reflects the deployment subdirectory
+  base: `/${projectPath}`, // Now: /fossnss-website
 });

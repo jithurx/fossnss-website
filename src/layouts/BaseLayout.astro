@@ -3,8 +3,7 @@ import { ViewTransitions } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getFaviconUrl } from '../utils/imageUrl';
-// RESTORED: Use the standard Astro import for global styles.
-import '../styles/globals.css'; 
+import '../styles/globals.css'; // Revert to standard import
 
 // Use site metadata from old config as defaults
 const { 
@@ -22,8 +21,7 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     
-    {/* REMOVED: The problematic manual link. Astro will now generate the link 
-        based on the import statement above and bundle it correctly. */}
+    {/* The link for global.css will now be handled automatically or by the fixed Vite plugin. */}
     
     <ViewTransitions />
   </head>
